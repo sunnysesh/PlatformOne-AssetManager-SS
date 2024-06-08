@@ -1,8 +1,11 @@
-﻿using NSubstitute;
+﻿using AutoMapper;
+using NSubstitute;
 using FluentAssertions;
 using NSubstitute.ReturnsExtensions;
 using PlatformOneAsset.Core.Interfaces;
 using PlatformOneAsset.Core.Models.Entities;
+using PlatformOneAsset.Core.Models.Response;
+using PlatformOneAsset.Core.Profiles;
 using PlatformOneAsset.Core.Services;
 
 namespace PlatformOneAsset.UnitTests.Services;
@@ -11,12 +14,20 @@ public class AssetServiceUnitTests
 {
     private AssetService _assetService;
     private IAssetRepository _mockAssetRepository;
+    private IMapper _mockMapper;
     
     [SetUp]
     public void Setup()
     {
         _mockAssetRepository = Substitute.For<IAssetRepository>();
-        _assetService = new AssetService(_mockAssetRepository);
+
+        var cfg = new MapperConfiguration(i =>
+        {
+            i.AddProfile<MappingProfile>();
+        });
+        _mockMapper = cfg.CreateMapper();
+        
+        _assetService = new AssetService(_mockAssetRepository, _mockMapper);
     }
 
     [Test]
@@ -73,7 +84,7 @@ public class AssetServiceUnitTests
             Symbol = "MSFT",
             ISIN = "US5949181045"
         };
-        _mockAssetRepository.GetByReferenceAsync(Arg.Any<string>())
+        _mockAssetRepository.GetBySymbol(Arg.Any<string>())
             .Returns(expectedAsset);
         
         //Act
@@ -88,7 +99,7 @@ public class AssetServiceUnitTests
     public async Task GetAssetViaSymbol_WhenAssetDoesntExists_ShouldReturnNull()
     {
         //Arrange
-        _mockAssetRepository.GetByReferenceAsync(Arg.Any<string>())
+        _mockAssetRepository.GetBySymbol(Arg.Any<string>())
             .ReturnsNull();
         
         //Act

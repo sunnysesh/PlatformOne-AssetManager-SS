@@ -1,31 +1,35 @@
-﻿namespace PlatformOneAsset.Core.Repositories;
+﻿using PlatformOneAsset.Core.Interfaces;
 
-public abstract class BaseRepository<T>
+namespace PlatformOneAsset.Core.Repositories;
+
+public abstract class BaseRepository<T> : IRepository<T>
 {
-    protected readonly List<T> _entities;
+    protected readonly Dictionary<string, T> _entities = new Dictionary<string, T>();
+    
+    public IEnumerable<T> GetAll()
+        => _entities.Values;
 
-    protected BaseRepository(List<T> entities)
+    public T GetByReference(string reference)
     {
-        _entities = entities;
-    }
+        if (_entities.TryGetValue(reference, out var entity))
+        {
+            return entity;
+        }
 
-    public Task<IEnumerable<T>> GetAllAsync()
+        return default(T);
+    }
+    
+    public T Add(T entity)
     {
-        throw new NotImplementedException();
+        var id = GetEntityId(entity);
+        _entities[id] = entity;
+        return entity;
     }
-
-    public Task<T> GetByReferenceAsync(string reference)
+    
+    public T Update(T entity)
     {
         throw new NotImplementedException();
     }
     
-    public Task<T> AddAsync(string reference)
-    {
-        throw new NotImplementedException();
-    }
-    
-    public Task<T> UpdateAsync(string reference)
-    {
-        throw new NotImplementedException();
-    }
+    protected abstract string GetEntityId(T entity);
 }

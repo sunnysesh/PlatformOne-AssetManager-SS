@@ -34,13 +34,14 @@ public class AssetServiceUnitTests
                 ISIN = "US5949181045"
             }
         };
-        _mockAssetRepository.GetAllAsync()
+        _mockAssetRepository.GetAll()
             .Returns(expectedAssets);
         
         //Act
         var result = await _assetService.GetAllAssetsAsync();
 
         //Assert
+        result.Should().HaveCount(1);
         result.First().Id.Should().Be(expectedGuid);
     }
     
@@ -48,7 +49,7 @@ public class AssetServiceUnitTests
     public async Task GetAllAssets_WhenAssetsDontExist_ShouldReturnEmpty()
     {
         //Arrange
-        _mockAssetRepository.GetAllAsync()
+        _mockAssetRepository.GetAll()
             .Returns(new List<Asset>());
         
         //Act

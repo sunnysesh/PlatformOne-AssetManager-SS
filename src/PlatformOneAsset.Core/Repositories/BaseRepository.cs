@@ -22,13 +22,20 @@ public abstract class BaseRepository<T> : IRepository<T>
     public T Add(T entity)
     {
         var id = GetEntityId(entity);
-        _entities[id] = entity;
+        if (!_entities.TryAdd(id, entity))
+            throw new InvalidOperationException();
+                
         return entity;
     }
     
     public T Update(T entity)
     {
-        throw new NotImplementedException();
+        var id = GetEntityId(entity);
+        if (!_entities.ContainsKey(id))
+            throw new InvalidOperationException();
+        
+        _entities[id] = entity;
+        return entity;
     }
     
     protected abstract string GetEntityId(T entity);

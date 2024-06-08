@@ -101,39 +101,88 @@ public class AssetRepositoryUnitTests
     public async Task Add_WhenAssetDoesntExist_ShouldAddToCollection()
     {
         //Arrange
+        string symbol = "MSFT";
+        var expectedAsset = new Asset()
+        {
+            Id = Guid.NewGuid(),
+            Name = "Microsoft",
+            Symbol = symbol,
+            ISIN = "US5949181045"
+        };
         
         //Act
-        
+        _assetRepository.Add(expectedAsset);
+
         //Assert
+        _assetRepository.GetBySymbol(symbol)
+            .Should().BeEquivalentTo(expectedAsset);
     }
     
     [Test]
-    public async Task Add_WhenAssetExists_ShouldThrowException()
+    public async Task Add_WhenAssetAlreadyExists_ShouldThrowException()
     {
         //Arrange
+        string symbol = "MSFT";
+        var expectedAsset = new Asset()
+        {
+            Id = Guid.NewGuid(),
+            Name = "Microsoft",
+            Symbol = symbol,
+            ISIN = "US5949181045"
+        };
         
-        //Act
+        _assetRepository.Add(expectedAsset);
         
-        //Assert
+        //Act & assert
+        _assetRepository.Invoking(i => i.Add(expectedAsset))
+            .Should().Throw<InvalidOperationException>();
     }
 
     [Test]
     public async Task UpdateAsync_WhenAssetExists_ShouldUpdateInCollection()
     {
         //Arrange
+        string symbol = "MSFT";
+        var existingAsset = new Asset()
+        {
+            Id = Guid.NewGuid(),
+            Name = "Microsoft",
+            Symbol = symbol,
+            ISIN = "US5949181045"
+        };
+        _assetRepository.Add(existingAsset);
         
+        var updatedAsset =  new Asset()
+        {
+            Id = Guid.NewGuid(),
+            Name = "Microsoft",
+            Symbol = symbol,
+            ISIN = "US5949181046"
+        };
+
         //Act
-        
+        _assetRepository.Update(updatedAsset);
+
         //Assert
+        _assetRepository.GetBySymbol(symbol)
+            .Should().BeEquivalentTo(updatedAsset);
     }
     
     [Test]
     public async Task UpdateAsync_WhenAssetDoesntExist_ShouldThrowException()
     {
         //Arrange
+        string symbol = "MSFT";
+        var expectedAsset = new Asset()
+        {
+            Id = Guid.NewGuid(),
+            Name = "Microsoft",
+            Symbol = symbol,
+            ISIN = "US5949181045"
+        };
         
-        //Act
-        
-        //Assert
+        //Act & assert
+        _assetRepository.Invoking(i => i.Update(expectedAsset))
+            .Should().Throw<InvalidOperationException>();
     }
 }

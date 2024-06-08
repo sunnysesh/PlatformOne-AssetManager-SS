@@ -2,10 +2,7 @@
 
 namespace PlatformOneAsset.Core.Interfaces;
 
-public interface IAssetRepository
+public interface IAssetRepository : IRepository<Asset>
 {
-    Task<IEnumerable<Asset>> GetAllAsync();
-    Task<Asset> GetByReferenceAsync(string reference);
-    Task<Asset> AddAsync(Asset asset);
-    Task<Asset> UpdateAsync(Asset asset);
+    Asset GetBySymbol(string symbol);
 }

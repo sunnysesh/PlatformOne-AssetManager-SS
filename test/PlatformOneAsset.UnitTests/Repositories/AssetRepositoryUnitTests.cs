@@ -7,7 +7,7 @@ namespace PlatformOneAsset.UnitTests.Repositories;
 
 public class AssetRepositoryUnitTests
 {
-    private IAssetRepository _assetRepository;
+    private AssetRepository _assetRepository;
     
     [SetUp]
     public void Setup()
@@ -16,7 +16,7 @@ public class AssetRepositoryUnitTests
     }
 
     [Test]
-    public async Task GetAllAsync_WhenAssetsExist_ShouldReturnAllAssets()
+    public void GetAll_WhenAssetsExist_ShouldReturnAllAssets()
     {
         //Arrange
         var expectedAssets = new List<Asset>()
@@ -36,21 +36,21 @@ public class AssetRepositoryUnitTests
                 ISIN = "US5949181046"
             }
         };
-        _assetRepository.AddAsync(expectedAssets[0]);
-        _assetRepository.AddAsync(expectedAssets[1]);
+        _assetRepository.Add(expectedAssets[0]);
+        _assetRepository.Add(expectedAssets[1]);
 
         //Act
-        var result = await _assetRepository.GetAllAsync();
+        var result = _assetRepository.GetAll();
 
         //Assert
         result.Should().BeEquivalentTo(expectedAssets);
     }
     
     [Test]
-    public async Task GetAllAsync_WhenNoAssetsExist_ShouldReturnEmptyCollection()
+    public async Task GetAll_WhenNoAssetsExist_ShouldReturnEmptyCollection()
     {
         //Arrange & act
-        var result = await _assetRepository.GetAllAsync();
+        var result = _assetRepository.GetAll();
         
         //Assert
         result.Should().BeEmpty();
@@ -68,10 +68,10 @@ public class AssetRepositoryUnitTests
             Symbol = reference,
             ISIN = "US5949181045"
         };
-        _assetRepository.AddAsync(expectedAsset);
+        _assetRepository.Add(expectedAsset);
         
         //Act
-        var result = await _assetRepository.GetByReferenceAsync(reference);
+        var result = _assetRepository.GetBySymbol(reference);
 
         //Assert
         result.Should().BeEquivalentTo(expectedAsset);
@@ -88,17 +88,17 @@ public class AssetRepositoryUnitTests
             Symbol = "MSFT",
             ISIN = "US5949181045"
         };
-        _assetRepository.AddAsync(expectedAsset);
+        _assetRepository.Add(expectedAsset);
         
         //Act
-        var result = await _assetRepository.GetByReferenceAsync("APPL");
+        var result = _assetRepository.GetBySymbol("APPL");
         
         //Assert
         result.Should().BeNull();
     }
     
     [Test]
-    public async Task AddAsync_WhenAssetDoesntExist_ShouldAddToCollection()
+    public async Task Add_WhenAssetDoesntExist_ShouldAddToCollection()
     {
         //Arrange
         
@@ -108,7 +108,7 @@ public class AssetRepositoryUnitTests
     }
     
     [Test]
-    public async Task AddAsync_WhenAssetExists_ShouldThrowException()
+    public async Task Add_WhenAssetExists_ShouldThrowException()
     {
         //Arrange
         

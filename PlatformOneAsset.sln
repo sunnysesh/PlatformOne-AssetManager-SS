@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlatformOneAsset.App", "src\PlatformOneAsset.App\PlatformOneAsset.App.csproj", "{C18D062A-5C25-435E-850E-F9941EE0D093}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlatformOneAsset.UnitTests", "test\PlatformOneAsset.UnitTests\PlatformOneAsset.UnitTests.csproj", "{DDAC822E-69C0-45E0-BAE8-3AE0AF01D464}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlatformOneAsset.Core", "src\PlatformOneAsset.Core\PlatformOneAsset.Core.csproj", "{71F6EAA9-1AB3-4353-A38D-39BD98291752}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C18D062A-5C25-435E-850E-F9941EE0D093}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C18D062A-5C25-435E-850E-F9941EE0D093}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C18D062A-5C25-435E-850E-F9941EE0D093}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C18D062A-5C25-435E-850E-F9941EE0D093}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDAC822E-69C0-45E0-BAE8-3AE0AF01D464}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDAC822E-69C0-45E0-BAE8-3AE0AF01D464}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDAC822E-69C0-45E0-BAE8-3AE0AF01D464}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDAC822E-69C0-45E0-BAE8-3AE0AF01D464}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71F6EAA9-1AB3-4353-A38D-39BD98291752}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71F6EAA9-1AB3-4353-A38D-39BD98291752}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71F6EAA9-1AB3-4353-A38D-39BD98291752}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71F6EAA9-1AB3-4353-A38D-39BD98291752}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

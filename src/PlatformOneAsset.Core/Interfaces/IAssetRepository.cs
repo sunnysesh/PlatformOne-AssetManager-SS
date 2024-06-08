@@ -4,8 +4,8 @@ namespace PlatformOneAsset.Core.Interfaces;
 
 public interface IAssetRepository
 {
-    IEnumerable<Asset> GetAll();
-    Asset GetByReference(string reference);
-    Asset Add(Asset asset);
-    Asset Update(Asset asset);
+    Task<IEnumerable<Asset>> GetAllAsync();
+    Task<Asset> GetByReferenceAsync(string reference);
+    Task<Asset> AddAsync(Asset asset);
+    Task<Asset> UpdateAsync(Asset asset);
 }

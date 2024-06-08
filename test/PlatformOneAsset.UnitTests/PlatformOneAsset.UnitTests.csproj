@@ -24,10 +24,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Repositories\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\..\src\PlatformOneAsset.Core\PlatformOneAsset.Core.csproj" />
     </ItemGroup>
 

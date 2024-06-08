@@ -1,5 +1,6 @@
 ﻿using NSubstitute;
 using FluentAssertions;
+using NSubstitute.ReturnsExtensions;
 using PlatformOneAsset.Core.Interfaces;
 using PlatformOneAsset.Core.Models.Entities;
 using PlatformOneAsset.Core.Services;
@@ -12,7 +13,7 @@ public class AssetServiceUnitTests
     private IAssetRepository _mockAssetRepository;
     
     [SetUp]
-    public void SetUp()
+    public void Setup()
     {
         _mockAssetRepository = Substitute.For<IAssetRepository>();
         _assetService = new AssetService(_mockAssetRepository);
@@ -33,7 +34,7 @@ public class AssetServiceUnitTests
                 ISIN = "US5949181045"
             }
         };
-        _mockAssetRepository.GetAll()
+        _mockAssetRepository.GetAllAsync()
             .Returns(expectedAssets);
         
         //Act
@@ -47,7 +48,7 @@ public class AssetServiceUnitTests
     public async Task GetAllAssets_WhenAssetsDontExist_ShouldReturnEmpty()
     {
         //Arrange
-        _mockAssetRepository.GetAll()
+        _mockAssetRepository.GetAllAsync()
             .Returns(new List<Asset>());
         
         //Act
@@ -71,7 +72,7 @@ public class AssetServiceUnitTests
             Symbol = "MSFT",
             ISIN = "US5949181045"
         };
-        _mockAssetRepository.GetByReference(Arg.Any<string>())
+        _mockAssetRepository.GetByReferenceAsync(Arg.Any<string>())
             .Returns(expectedAsset);
         
         //Act
@@ -86,8 +87,8 @@ public class AssetServiceUnitTests
     public async Task GetAssetViaSymbol_WhenAssetDoesntExists_ShouldReturnNull()
     {
         //Arrange
-        _mockAssetRepository.GetByReference(Arg.Any<string>())
-            .Returns(_ => null);
+        _mockAssetRepository.GetByReferenceAsync(Arg.Any<string>())
+            .ReturnsNull();
         
         //Act
         var result = await _assetService.GetAssetViaSymbolAsync("MSFT");

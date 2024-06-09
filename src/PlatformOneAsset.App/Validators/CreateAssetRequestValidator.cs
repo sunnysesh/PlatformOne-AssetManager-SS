@@ -9,6 +9,6 @@ public class CreateAssetRequestValidator : AbstractValidator<CreateAssetRequest>
     {
         RuleFor(i => i.Name).NotEmpty();
         RuleFor(i => i.Symbol).NotEmpty();
-        RuleFor(i => i.ISIN).NotEmpty();
+        RuleFor(i => i.Isin).NotEmpty();
     }
 }

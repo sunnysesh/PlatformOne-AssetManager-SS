@@ -27,14 +27,14 @@ public class AssetRepositoryUnitTests
                 Id = Guid.NewGuid(),
                 Name = "Microsoft",
                 Symbol = "MSFT",
-                ISIN = "US5949181045"
+                Isin = "US5949181045"
             },
             new Asset()
             {
                 Id = Guid.NewGuid(),
                 Name = "Apple",
                 Symbol = "APPL",
-                ISIN = "US5949181046"
+                Isin = "US5949181046"
             }
         };
         _assetRepository.Add(expectedAssets[0]);
@@ -67,7 +67,7 @@ public class AssetRepositoryUnitTests
             Id = Guid.NewGuid(),
             Name = "Microsoft",
             Symbol = reference,
-            ISIN = "US5949181045"
+            Isin = "US5949181045"
         };
         _assetRepository.Add(expectedAsset);
         
@@ -87,7 +87,7 @@ public class AssetRepositoryUnitTests
             Id = Guid.NewGuid(),
             Name = "Microsoft",
             Symbol = "MSFT",
-            ISIN = "US5949181045"
+            Isin = "US5949181045"
         };
         _assetRepository.Add(expectedAsset);
         
@@ -108,7 +108,7 @@ public class AssetRepositoryUnitTests
             Id = Guid.NewGuid(),
             Name = "Microsoft",
             Symbol = symbol,
-            ISIN = "US5949181045"
+            Isin = "US5949181045"
         };
         
         //Act
@@ -129,7 +129,7 @@ public class AssetRepositoryUnitTests
             Id = Guid.NewGuid(),
             Name = "Microsoft",
             Symbol = symbol,
-            ISIN = "US5949181045"
+            Isin = "US5949181045"
         };
         
         _assetRepository.Add(expectedAsset);
@@ -149,7 +149,7 @@ public class AssetRepositoryUnitTests
             Id = Guid.NewGuid(),
             Name = "Microsoft",
             Symbol = symbol,
-            ISIN = "US5949181045"
+            Isin = "US5949181045"
         };
         _assetRepository.Add(existingAsset);
         
@@ -158,7 +158,7 @@ public class AssetRepositoryUnitTests
             Id = Guid.NewGuid(),
             Name = "Microsoft",
             Symbol = symbol,
-            ISIN = "US5949181046"
+            Isin = "US5949181046"
         };
 
         //Act
@@ -179,7 +179,7 @@ public class AssetRepositoryUnitTests
             Id = Guid.NewGuid(),
             Name = "Microsoft",
             Symbol = symbol,
-            ISIN = "US5949181045"
+            Isin = "US5949181045"
         };
         
         //Act & assert

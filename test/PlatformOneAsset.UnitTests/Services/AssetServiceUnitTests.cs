@@ -45,7 +45,7 @@ public class AssetServiceUnitTests
                 Id = expectedGuid,
                 Name = "Microsoft",
                 Symbol = "MSFT",
-                ISIN = "US5949181045"
+                Isin = "US5949181045"
             }
         };
         _mockAssetRepository.GetAll()
@@ -85,7 +85,7 @@ public class AssetServiceUnitTests
             Id = expectedGuid,
             Name = "Microsoft",
             Symbol = "MSFT",
-            ISIN = "US5949181045"
+            Isin = "US5949181045"
         };
         _mockAssetRepository.GetBySymbol(Arg.Any<string>())
             .Returns(expectedAsset);
@@ -121,7 +121,7 @@ public class AssetServiceUnitTests
         {
             Name = "Microsoft",
             Symbol = "MSFT",
-            ISIN = "US5949181045"
+            Isin = "US5949181045"
         };
         
         _mockAssetRepository.Add(Arg.Any<Asset>())
@@ -133,7 +133,7 @@ public class AssetServiceUnitTests
         //Assert
         result.Name.Should().Be(assetRequest.Name);
         result.Symbol.Should().Be(assetRequest.Symbol);
-        result.ISIN.Should().Be(assetRequest.ISIN);
+        result.Isin.Should().Be(assetRequest.Isin);
     }
     
     [Test]
@@ -159,7 +159,7 @@ public class AssetServiceUnitTests
         {
             Name = "Microsoft",
             Symbol = symbol,
-            ISIN = "US5949181046"
+            Isin = "US5949181046"
         };
         
         _mockAssetRepository.Update(Arg.Any<Asset>())
@@ -171,7 +171,7 @@ public class AssetServiceUnitTests
         //Assert
         result.Name.Should().Be(updatedAssetRequest.Name);
         result.Symbol.Should().Be(mockAsset.Symbol);
-        result.ISIN.Should().Be(mockAsset.ISIN);
+        result.Isin.Should().Be(mockAsset.Isin);
         
     }
     

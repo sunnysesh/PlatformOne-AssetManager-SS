@@ -142,7 +142,7 @@ public class AssetServiceUnitTests
         //Arrange
         var assetRequest = new CreateAssetRequest("Microsoft", "MSFT", "US5949181045");
         _mockAssetRepository.Add(Arg.Any<Asset>())
-            .Throws(new EntityAlreadyExistsException("Error"));
+            .Throws(new EntityAlreadyExistsException("Error: Entity already exists."));
 
         //Act & assert
         _assetService.Invoking(i => i.AddAssetAsync(assetRequest))
@@ -150,22 +150,41 @@ public class AssetServiceUnitTests
     }
     
     [Test]
-    public void UpdateAsset_WhenAssetAlreadyExists_ShouldUpdateRepo()
+    public async Task UpdateAsset_WhenAssetAlreadyExists_ShouldUpdateRepo()
     {
         //Arrange
+        string symbol = "MSFT";
+        var updatedAssetRequest = new UpdateAssetRequest("Microsoft", "US5949181045");
+        var mockAsset = new Asset()
+        {
+            Name = "Microsoft",
+            Symbol = symbol,
+            ISIN = "US5949181046"
+        };
         
+        _mockAssetRepository.Update(Arg.Any<Asset>())
+            .Returns(mockAsset);
+
         //Act
-        
+        var result = await _assetService.UpdateAssetAsync(symbol, updatedAssetRequest);
+
         //Assert
+        result.Name.Should().Be(updatedAssetRequest.Name);
+        result.Symbol.Should().Be(mockAsset.Symbol);
+        result.ISIN.Should().Be(mockAsset.ISIN);
+        
     }
     
     [Test]
     public void UpdateAsset_WhenAssetDoesntExists_ShouldThrowException()
     {
         //Arrange
-        
-        //Act
-        
-        //Assert
+        var updatedAssetRequest = new UpdateAssetRequest("Microsoft",  "US5949181045");
+        _mockAssetRepository.Update(Arg.Any<Asset>())
+            .Throws(new EntityNotFoundException("Error: Entity not found"));
+
+        //Act & assert
+        _assetService.Invoking(i => i.UpdateAssetAsync("MSFT", updatedAssetRequest))
+            .Should().ThrowAsync<EntityNotFoundException>();
     }
 }

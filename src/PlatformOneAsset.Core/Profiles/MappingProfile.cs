@@ -12,6 +12,11 @@ public class MappingProfile : Profile
         CreateMap<CreateAssetRequest, Asset>()
             .ForMember(dest => dest.Id, opt => 
                 opt.MapFrom(src => Guid.NewGuid()));
+
+        CreateMap<UpdateAssetRequest, Asset>()
+            .ForMember(dest => dest.Id, opt =>
+                opt.Ignore());
+            
         CreateMap<Asset, AssetResponse>();
     }
 }

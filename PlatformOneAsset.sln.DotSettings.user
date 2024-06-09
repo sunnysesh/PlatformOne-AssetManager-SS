@@ -1,10 +1,13 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=00177b86_002D5072_002D4481_002D8867_002D94bd5eca1e12/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="GetAll_WhenAssetsExist_ShouldReturnAllAssets" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;TestAncestor&gt;&#xD;
-    &lt;TestId&gt;NUnit3x::DDAC822E-69C0-45E0-BAE8-3AE0AF01D464::net8.0::PlatformOneAsset.UnitTests.Repositories.AssetRepositoryUnitTests&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;NUnit3x::DDAC822E-69C0-45E0-BAE8-3AE0AF01D464::net8.0::PlatformOneAsset.UnitTests.Services.AssetServiceUnitTests&lt;/TestId&gt;&#xD;
-  &lt;/TestAncestor&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=0fe82d34_002Db349_002D4bfd_002Da5df_002D49a190057908/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from Solution" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;Solution /&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
+	
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=32eabb15_002D7569_002D47b1_002Db7ac_002De9e500367d73/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from AssetServiceUnitTests.cs" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;ProjectFile&gt;DDAC822E-69C0-45E0-BAE8-3AE0AF01D464/d:Services/f:AssetServiceUnitTests.cs&lt;/ProjectFile&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=b2610e5f_002D6141_002D48e1_002Db748_002D14cbd880fa5f/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="AssetServiceUnitTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::DDAC822E-69C0-45E0-BAE8-3AE0AF01D464::net8.0::PlatformOneAsset.UnitTests.Services.AssetServiceUnitTests&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

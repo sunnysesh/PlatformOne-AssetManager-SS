@@ -54,6 +54,22 @@ public class AssetService : IAssetService
 
     public async Task<AssetResponse> UpdateAssetAsync(string symbol, UpdateAssetRequest request)
     {
-        throw new NotImplementedException();
+        var updatedAsset = _mapper.Map<Asset>(request);
+        updatedAsset.Symbol = symbol;
+        
+        try
+        {
+            var result = _assetRepository.Update(updatedAsset);
+            return _mapper.Map<AssetResponse>(result);
+        }
+        catch (EntityNotFoundException)
+        {
+            throw;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 }

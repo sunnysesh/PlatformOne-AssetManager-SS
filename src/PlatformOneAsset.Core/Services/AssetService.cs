@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using PlatformOneAsset.Core.Exceptions;
 using PlatformOneAsset.Core.Interfaces;
+using PlatformOneAsset.Core.Models.Entities;
 using PlatformOneAsset.Core.Models.Request;
 using PlatformOneAsset.Core.Models.Response;
 
@@ -32,7 +34,22 @@ public class AssetService : IAssetService
 
     public async Task<AssetResponse> AddAssetAsync(CreateAssetRequest request)
     {
-        throw new NotImplementedException();
+        var asset = _mapper.Map<Asset>(request);
+
+        try
+        {
+            var newAsset = _assetRepository.Add(asset);
+            return _mapper.Map<AssetResponse>(newAsset);
+        }
+        catch (EntityAlreadyExistsException)
+        {
+            throw;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw new Exception();
+        }
     }
 
     public async Task<AssetResponse> UpdateAssetAsync(string symbol, UpdateAssetRequest request)

@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
 using NSubstitute;
 using FluentAssertions;
+using NSubstitute.ExceptionExtensions;
 using NSubstitute.ReturnsExtensions;
+using PlatformOneAsset.Core.Exceptions;
 using PlatformOneAsset.Core.Interfaces;
 using PlatformOneAsset.Core.Models.Entities;
+using PlatformOneAsset.Core.Models.Request;
 using PlatformOneAsset.Core.Models.Response;
 using PlatformOneAsset.Core.Profiles;
 using PlatformOneAsset.Core.Services;
@@ -14,7 +17,7 @@ public class AssetServiceUnitTests
 {
     private AssetService _assetService;
     private IAssetRepository _mockAssetRepository;
-    private IMapper _mockMapper;
+    private IMapper _mapper;
     
     [SetUp]
     public void Setup()
@@ -25,9 +28,9 @@ public class AssetServiceUnitTests
         {
             i.AddProfile<MappingProfile>();
         });
-        _mockMapper = cfg.CreateMapper();
+        _mapper = cfg.CreateMapper();
         
-        _assetService = new AssetService(_mockAssetRepository, _mockMapper);
+        _assetService = new AssetService(_mockAssetRepository, _mapper);
     }
 
     [Test]
@@ -110,23 +113,40 @@ public class AssetServiceUnitTests
     }
     
     [Test]
-    public void AddAsset_WhenAssetDoesntExist_ShouldAddToRepo()
+    public async Task AddAsset_WhenAssetDoesntExist_ShouldAddToRepo()
     {
         //Arrange
+        var assetRequest = new CreateAssetRequest("Microsoft", "MSFT", "US5949181045");
+        var mockAsset = new Asset()
+        {
+            Name = "Microsoft",
+            Symbol = "MSFT",
+            ISIN = "US5949181045"
+        };
+        
+        _mockAssetRepository.Add(Arg.Any<Asset>())
+            .Returns(mockAsset);
         
         //Act
-        
+        var result = await _assetService.AddAssetAsync(assetRequest);
+
         //Assert
+        result.Name.Should().Be(assetRequest.Name);
+        result.Symbol.Should().Be(assetRequest.Symbol);
+        result.ISIN.Should().Be(assetRequest.ISIN);
     }
     
     [Test]
     public void AddAsset_WhenAssetAlreadyExists_ShouldThrowException()
     {
         //Arrange
-        
-        //Act
-        
-        //Assert
+        var assetRequest = new CreateAssetRequest("Microsoft", "MSFT", "US5949181045");
+        _mockAssetRepository.Add(Arg.Any<Asset>())
+            .Throws(new EntityAlreadyExistsException("Error"));
+
+        //Act & assert
+        _assetService.Invoking(i => i.AddAssetAsync(assetRequest))
+            .Should().ThrowAsync<EntityAlreadyExistsException>();
     }
     
     [Test]

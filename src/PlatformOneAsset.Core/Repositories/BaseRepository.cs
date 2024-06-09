@@ -1,4 +1,5 @@
-﻿using PlatformOneAsset.Core.Interfaces;
+﻿using PlatformOneAsset.Core.Exceptions;
+using PlatformOneAsset.Core.Interfaces;
 
 namespace PlatformOneAsset.Core.Repositories;
 
@@ -23,7 +24,7 @@ public abstract class BaseRepository<T> : IRepository<T>
     {
         var id = GetEntityId(entity);
         if (!_entities.TryAdd(id, entity))
-            throw new InvalidOperationException();
+            throw new EntityAlreadyExistsException($"Error: Entity {id} already exists.");
                 
         return entity;
     }
@@ -32,7 +33,7 @@ public abstract class BaseRepository<T> : IRepository<T>
     {
         var id = GetEntityId(entity);
         if (!_entities.ContainsKey(id))
-            throw new InvalidOperationException();
+            throw new EntityNotFoundException($"Error: Entity {id} does not exist.");
         
         _entities[id] = entity;
         return entity;

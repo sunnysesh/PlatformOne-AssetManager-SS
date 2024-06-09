@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using PlatformOneAsset.Core.Exceptions;
 using PlatformOneAsset.Core.Interfaces;
 using PlatformOneAsset.Core.Models.Entities;
 using PlatformOneAsset.Core.Repositories;
@@ -135,7 +136,7 @@ public class AssetRepositoryUnitTests
         
         //Act & assert
         _assetRepository.Invoking(i => i.Add(expectedAsset))
-            .Should().Throw<InvalidOperationException>();
+            .Should().Throw<EntityAlreadyExistsException>();
     }
 
     [Test]
@@ -183,6 +184,6 @@ public class AssetRepositoryUnitTests
         
         //Act & assert
         _assetRepository.Invoking(i => i.Update(expectedAsset))
-            .Should().Throw<InvalidOperationException>();
+            .Should().Throw<EntityNotFoundException>();
     }
 }

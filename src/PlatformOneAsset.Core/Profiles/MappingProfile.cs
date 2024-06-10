@@ -18,5 +18,6 @@ public class MappingProfile : Profile
                 opt.Ignore());
             
         CreateMap<Asset, AssetResponse>();
+        CreateMap<Price, PriceResponse>();
     }
 }

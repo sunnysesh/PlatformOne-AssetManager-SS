@@ -1,4 +1,5 @@
 using FluentValidation;
+using Microsoft.AspNetCore.Http.HttpResults;
 using PlatformOneAsset.Core.Exceptions;
 using PlatformOneAsset.Core.Interfaces;
 using PlatformOneAsset.Core.Models.Request;
@@ -15,7 +16,10 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
 builder.Services.AddScoped<IAssetService, AssetService>();
+builder.Services.AddScoped<IPriceService, PriceService>();
+
 builder.Services.AddSingleton<IAssetRepository, AssetRepository>();
+builder.Services.AddSingleton<IPriceRepository, PriceRepository>();
 
 var app = builder.Build();
 
@@ -96,6 +100,12 @@ app.MapPut("/assets/{symbol}", async (UpdateAssetRequest request, string symbol,
             statusCode: StatusCodes.Status500InternalServerError
         );
     }
+});
+
+app.MapGet("/prices/", async (string symbol, string date, IPriceService priceService, string? source = null) =>
+{
+    var response = await priceService.GetAssetPricesViaDateAsync(symbol, date, source);
+    return Results.Ok(response);
 });
 
 app.UseHttpsRedirection();

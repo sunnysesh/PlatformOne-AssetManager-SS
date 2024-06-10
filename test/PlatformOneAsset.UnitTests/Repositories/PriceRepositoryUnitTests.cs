@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using PlatformOneAsset.Core.Models.Entities;
+using PlatformOneAsset.Core.Repositories;
 
 namespace PlatformOneAsset.UnitTests.Repositories;
 
@@ -41,7 +42,7 @@ public class PriceRepositoryUnitTests
 
         //Assert
         result.Should().HaveCount(1);
-        result[0].Should().BeEquivalentTo(expectedPrices);
+        result.FirstOrDefault().Should().BeEquivalentTo(expectedPrices[0]);
     }
     
     [Test]

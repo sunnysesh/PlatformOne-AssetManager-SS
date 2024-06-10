@@ -9,5 +9,6 @@
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=b2610e5f_002D6141_002D48e1_002Db748_002D14cbd880fa5f/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="AssetServiceUnitTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;NUnit3x::DDAC822E-69C0-45E0-BAE8-3AE0AF01D464::net8.0::PlatformOneAsset.UnitTests.Services.AssetServiceUnitTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::DDAC822E-69C0-45E0-BAE8-3AE0AF01D464::net8.0::PlatformOneAsset.UnitTests.Repositories.PriceRepositoryUnitTests&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

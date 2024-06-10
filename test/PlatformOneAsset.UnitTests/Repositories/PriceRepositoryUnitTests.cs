@@ -30,7 +30,7 @@ public class PriceRepositoryUnitTests
             new Price()
             {
                 Symbol = symbol,
-                Date = DateTime.Today.AddDays(1),
+                Date = DateTime.Today.AddDays(-1),
                 Value = 30.0m
             },
         };

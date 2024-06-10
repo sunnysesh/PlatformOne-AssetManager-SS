@@ -102,10 +102,35 @@ app.MapPut("/assets/{symbol}", async (UpdateAssetRequest request, string symbol,
     }
 });
 
-app.MapGet("/prices/", async (string symbol, string date, IPriceService priceService, string? source = null) =>
+app.MapGet("/prices", async (string symbol, string date, IPriceService priceService, string? source = null) =>
 {
     var response = await priceService.GetAssetPricesViaDateAsync(symbol, date, source);
     return Results.Ok(response);
+});
+
+app.MapPost("/prices", async (CreatePriceRequest request, IPriceService priceService, IValidator<CreatePriceRequest> validator) =>
+{
+    var validResult = await validator.ValidateAsync(request);
+    if (!validResult.IsValid)
+        return Results.BadRequest($"Validation error occured. {validResult.ToString()}");
+
+    try
+    {
+        var response = await priceService.AddPriceAsync(request);
+        return Results.Created($"/prices/", response);
+    }
+    catch (AssetNotFoundException ex)
+    {
+        return Results.Conflict(new
+        {
+            message = ex.Message
+        });
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine(ex);
+        throw;
+    }
 });
 
 app.UseHttpsRedirection();

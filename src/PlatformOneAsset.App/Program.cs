@@ -131,8 +131,10 @@ app.MapPost("/prices", async (CreatePriceRequest request, IPriceService priceSer
     }
     catch (Exception ex)
     {
-        Console.WriteLine(ex);
-        throw;
+        return Results.Problem(
+            detail: ex.Message,
+            statusCode: StatusCodes.Status500InternalServerError
+        );
     }
 });
 

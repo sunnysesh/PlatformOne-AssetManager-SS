@@ -119,6 +119,8 @@ public class PriceServiceUnitTests
         };
         _mockPriceRepository.Add(Arg.Any<Price>())
             .Returns(expectedPrice);
+        _mockPriceRepository.GetPrices(Arg.Any<string>(), Arg.Any<DateTime>(), Arg.Any<string>())
+            .Returns(_ => new List<Price>());
 
         var priceRequest = new CreatePriceRequest(
             expectedPrice.Symbol, expectedPrice.Date, expectedPrice.Value, expectedPrice.Source
@@ -147,6 +149,33 @@ public class PriceServiceUnitTests
                 "MSFT", DateTime.Today, 30.0m, "S&P500"
             )))
             .Should().ThrowAsync<AssetNotFoundException>();
+    }
+
+    [Test]
+    public async Task AddPriceAsync_WhenPriceWithSameSourceAlreadyAttachedoAsset_ShouldThrowException()
+    {
+        //Arrange
+        _mockAssetRepository.AssetExists(Arg.Any<string>())
+            .Returns(true);
+        
+        var priceRequest = new CreatePriceRequest(
+            "MSFT", DateTime.Today, 20.0m, "LSEG"
+        );
+        
+        _mockPriceRepository.GetPrices(Arg.Any<string>(), Arg.Any<DateTime>(), Arg.Any<string>())
+            .Returns(new List<Price>()
+            {
+                new Price()
+                {
+                    Symbol = priceRequest.Symbol,
+                    Date = priceRequest.Date,
+                    Source = priceRequest.Source
+                }
+            });
+        
+        //Act & assert
+        _priceService.Invoking(i => i.AddPriceAsync(priceRequest))
+            .Should().ThrowAsync<SourceAlreadyExistsException>();
     }
 
     [Test]

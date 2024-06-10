@@ -36,6 +36,10 @@ public class PriceService : IPriceService
         if (!_assetRepository.AssetExists(request.Symbol))
             throw new AssetNotFoundException($"Error: Asset not found for {request.Symbol}");
 
+        var existingPrices = _priceRepository.GetPrices(request.Symbol, request.Date, request.Source);
+        if (existingPrices.FirstOrDefault() != null)
+            throw new SourceAlreadyExistsException($"Error: Price with source {request.Source} already exists for asset {request.Symbol}");
+        
         var price = _mapper.Map<Price>(request);
         price.UpdateTimeStamp(DateTime.UtcNow);
 

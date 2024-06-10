@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using FluentAssertions;
 using NSubstitute;
+using PlatformOneAsset.Core.Exceptions;
 using PlatformOneAsset.Core.Interfaces;
 using PlatformOneAsset.Core.Models.Entities;
+using PlatformOneAsset.Core.Models.Request;
 using PlatformOneAsset.Core.Profiles;
 using PlatformOneAsset.Core.Services;
 
@@ -12,18 +14,20 @@ public class PriceServiceUnitTests
 {
     private PriceService _priceService;
     private IPriceRepository _mockPriceRepository;
+    private IAssetRepository _mockAssetRepository;
     private IMapper _mapper;
     
     [SetUp]
     public void Setup()
     {
         _mockPriceRepository = Substitute.For<IPriceRepository>();
+        _mockAssetRepository = Substitute.For<IAssetRepository>();
         var cfg = new MapperConfiguration(i =>
         {
             i.AddProfile<MappingProfile>();
         });
         _mapper = cfg.CreateMapper();
-        _priceService = new PriceService(_mockPriceRepository, _mapper);
+        _priceService = new PriceService(_mockPriceRepository, _mockAssetRepository, _mapper);
     }
 
     [Test]
@@ -93,5 +97,52 @@ public class PriceServiceUnitTests
         //Act & assert
         _priceService.Invoking(i => i.GetAssetPricesViaDateAsync("MSFT", invalidDate))
             .Should().ThrowAsync<ArgumentException>();
+    }
+
+    [Test]
+    public async Task AddPriceAsync_WhenAssetExists_ShouldReturnAddedPrice()
+    {
+        //Arrange
+        _mockAssetRepository.AssetExists(Arg.Any<string>())
+            .Returns(true);
+
+        var expectedPrice = new Price()
+        {
+            Symbol = "MSFT",
+            Date = DateTime.Today,
+            Value = 30.0m,
+            Source = "S&P500",
+            TimeStamp = DateTime.Today
+        };
+        _mockPriceRepository.Add(Arg.Any<Price>())
+            .Returns(expectedPrice);
+
+        var priceRequest = new CreatePriceRequest(
+            expectedPrice.Symbol, expectedPrice.Date, expectedPrice.Value, expectedPrice.Source
+        );
+        
+        //Act
+        var result = await _priceService.AddPriceAsync(priceRequest);
+
+        //Assert
+        result.Symbol.Should().Be(priceRequest.Symbol);
+        result.Date.Should().Be(priceRequest.Date);
+        result.Value.Should().Be(priceRequest.Value);
+        result.Source.Should().Be(priceRequest.Source);
+        result.TimeStamp.Should().NotBe(DateTime.MinValue);
+    }
+    
+    [Test]
+    public async Task AddPriceAsync_WhenAssetDoesntExist_ShouldThrowException()
+    {
+        //Arrange
+        _mockAssetRepository.AssetExists(Arg.Any<string>())
+            .Returns(false);
+        
+        //Act & assert
+        _priceService.Invoking(i => i.AddPriceAsync(new CreatePriceRequest(
+                "MSFT", DateTime.Today, 30.0m, "S&P500"
+            )))
+            .Should().ThrowAsync<AssetNotFoundException>();
     }
 }

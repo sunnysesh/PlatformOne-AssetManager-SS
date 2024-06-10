@@ -10,6 +10,9 @@ public class AssetRepository : BaseRepository<Asset>, IAssetRepository
         return _entities.Values.Where(i => i.Symbol == symbol).FirstOrDefault();
     }
 
+    public bool AssetExists(string symbol)
+        => _entities.Values.Any(i => i.Symbol == symbol);
+
     protected override string GetEntityId(Asset entity)
         => entity.Symbol;
 }

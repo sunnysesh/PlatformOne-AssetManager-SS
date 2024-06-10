@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using PlatformOneAsset.Core.Exceptions;
 using PlatformOneAsset.Core.Interfaces;
+using PlatformOneAsset.Core.Models.Entities;
 using PlatformOneAsset.Core.Models.Request;
 using PlatformOneAsset.Core.Models.Response;
 
@@ -8,11 +10,13 @@ namespace PlatformOneAsset.Core.Services;
 public class PriceService : IPriceService
 {
     private readonly IPriceRepository _priceRepository;
+    private readonly IAssetRepository _assetRepository;
     private readonly IMapper _mapper;
     
-    public PriceService(IPriceRepository priceRepository, IMapper mapper)
+    public PriceService(IPriceRepository priceRepository, IAssetRepository assetRepository, IMapper mapper)
     {
         _priceRepository = priceRepository;
+        _assetRepository = assetRepository;
         _mapper = mapper;
     }
     
@@ -25,9 +29,16 @@ public class PriceService : IPriceService
         return _mapper.Map<IEnumerable<PriceResponse>>(results);
     }
 
-    public Task<PriceResponse> AddPriceAsync(CreatePriceRequest request)
+    public async Task<PriceResponse> AddPriceAsync(CreatePriceRequest request)
     {
-        throw new NotImplementedException();
+        if (!_assetRepository.AssetExists(request.Symbol))
+            throw new AssetNotFoundException($"Error: Asset not found for {request.Symbol}");
+
+        var price = _mapper.Map<Price>(request);
+        price.UpdateTimeStamp(DateTime.UtcNow);
+
+        var result = _priceRepository.Add(price);
+        return _mapper.Map<PriceResponse>(result);
     }
 
     public Task<PriceResponse> UpdatePriceAsync(UpdatePriceRequest request)

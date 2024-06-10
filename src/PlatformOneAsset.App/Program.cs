@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using PlatformOneAsset.Core.Exceptions;
 using PlatformOneAsset.Core.Interfaces;
 using PlatformOneAsset.Core.Models.Request;
+using PlatformOneAsset.Core.Models.Response;
 using PlatformOneAsset.Core.Profiles;
 using PlatformOneAsset.Core.Repositories;
 using PlatformOneAsset.Core.Services;
@@ -36,13 +37,9 @@ app.MapGet("/assets", async (IAssetService assetService) =>
 });
 
 app.MapGet("/assets/{symbol}", async (string symbol, IAssetService assetService) =>
-{
-    var response = await assetService.GetAssetViaSymbolAsync(symbol);
-    if (response == null)
-        return Results.NotFound();
-
-    return Results.Ok(response);
-});
+    await assetService.GetAssetViaSymbolAsync(symbol) is AssetResponse response
+        ? Results.Ok(response)
+        : Results.NotFound());
 
 app.MapPost("/assets", async (CreateAssetRequest request ,IAssetService assetService, IValidator<CreateAssetRequest> validator) =>
 {
@@ -103,10 +100,9 @@ app.MapPut("/assets/{symbol}", async (UpdateAssetRequest request, string symbol,
 });
 
 app.MapGet("/prices", async (string symbol, string date, IPriceService priceService, string? source = null) =>
-{
-    var response = await priceService.GetAssetPricesViaDateAsync(symbol, date, source);
-    return Results.Ok(response);
-});
+    await priceService.GetAssetPricesViaDateAsync(symbol, date, source) is PriceResponse response
+        ? Results.Ok(response)
+        : Results.NotFound());
 
 app.MapPost("/prices", async (CreatePriceRequest request, IPriceService priceService, IValidator<CreatePriceRequest> validator) =>
 {
@@ -121,6 +117,13 @@ app.MapPost("/prices", async (CreatePriceRequest request, IPriceService priceSer
     }
     catch (AssetNotFoundException ex)
     {
+        return Results.NotFound(new
+        {
+            message = ex.Message
+        });
+    }
+    catch (EntityAlreadyExistsException ex )
+    {
         return Results.Conflict(new
         {
             message = ex.Message
@@ -130,6 +133,33 @@ app.MapPost("/prices", async (CreatePriceRequest request, IPriceService priceSer
     {
         Console.WriteLine(ex);
         throw;
+    }
+});
+
+app.MapPut("/prices", async (UpdatePriceRequest request, IPriceService priceService, IValidator<UpdatePriceRequest> validator) =>
+{
+    var validResult = await validator.ValidateAsync(request);
+    if (!validResult.IsValid)
+        return Results.BadRequest($"Validation error occured. {validResult.ToString()}");
+
+    try
+    {
+        var result = await priceService.UpdatePriceAsync(request);
+        return Results.Ok(result);
+    }
+    catch (EntityNotFoundException ex)
+    {
+        return Results.NotFound(new
+        {
+            message = ex.Message
+        });
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(
+            detail: ex.Message,
+            statusCode: StatusCodes.Status500InternalServerError
+        );
     }
 });
 

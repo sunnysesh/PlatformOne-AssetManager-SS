@@ -20,6 +20,7 @@ public class MappingProfile : Profile
         CreateMap<CreatePriceRequest, Price>()
             .ForMember(dest => dest.Id, opt => 
                 opt.MapFrom(src => Guid.NewGuid()));;
+        CreateMap<UpdatePriceRequest, Price>();
         CreateMap<Price, PriceResponse>();
     }
 }

@@ -2,6 +2,7 @@
 
 public class PriceResponse
 {
+    public Guid Id { get; set; }
     public string Symbol { get; set; }
     public DateTime Date { get; set; }
     public decimal Value { get; set; }

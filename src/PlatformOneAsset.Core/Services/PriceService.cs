@@ -25,7 +25,9 @@ public class PriceService : IPriceService
         if (!DateTime.TryParse(date, out var parsedDate))
             throw new ArgumentException("Error: Date is invalid");
 
-        var results = _priceRepository.GetPrices(symbol, parsedDate, source);
+        var results = string.IsNullOrEmpty(source)
+            ? _priceRepository.GetPrices(symbol, parsedDate)
+            : _priceRepository.GetPrices(symbol, parsedDate, source);
         return _mapper.Map<IEnumerable<PriceResponse>>(results);
     }
 
@@ -37,12 +39,40 @@ public class PriceService : IPriceService
         var price = _mapper.Map<Price>(request);
         price.UpdateTimeStamp(DateTime.UtcNow);
 
-        var result = _priceRepository.Add(price);
-        return _mapper.Map<PriceResponse>(result);
+        try
+        {
+            var result = _priceRepository.Add(price);
+            return _mapper.Map<PriceResponse>(result);
+        }
+        catch (EntityAlreadyExistsException ex)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            throw new Exception();
+        }
     }
 
-    public Task<PriceResponse> UpdatePriceAsync(UpdatePriceRequest request)
+    public async Task<PriceResponse> UpdatePriceAsync(UpdatePriceRequest request)
     {
-        throw new NotImplementedException();
+        var updatedPrice = _mapper.Map<Price>(request);
+        updatedPrice.UpdateTimeStamp(DateTime.Now);
+
+        try
+        {
+            var result = _priceRepository.Update(updatedPrice);
+            return _mapper.Map<PriceResponse>(result);
+        }
+        catch (EntityNotFoundException ex)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            throw new Exception();
+        }
     }
 }

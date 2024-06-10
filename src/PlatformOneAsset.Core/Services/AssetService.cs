@@ -69,7 +69,7 @@ public class AssetService : IAssetService
         catch (Exception e)
         {
             Console.WriteLine(e);
-            throw;
+            throw new Exception();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentAssertions;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using PlatformOneAsset.Core.Exceptions;
 using PlatformOneAsset.Core.Interfaces;
 using PlatformOneAsset.Core.Models.Entities;
@@ -62,12 +63,14 @@ public class PriceServiceUnitTests
         result.Should().SatisfyRespectively(
             first =>
             {
+                first.Id.Should().Be(expectedPrices[0].Id);
                 first.Symbol.Should().Be(symbol);
                 first.Date.Should().Be(DateTime.Today);
                 first.Value.Should().Be(expectedPrices[0].Value);
             },
             second =>
             {
+                second.Id.Should().Be(expectedPrices[1].Id);
                 second.Symbol.Should().Be(symbol);
                 second.Date.Should().Be(DateTime.Today);
                 second.Value.Should().Be(expectedPrices[1].Value);
@@ -144,5 +147,51 @@ public class PriceServiceUnitTests
                 "MSFT", DateTime.Today, 30.0m, "S&P500"
             )))
             .Should().ThrowAsync<AssetNotFoundException>();
+    }
+
+    [Test]
+    public async Task UpdatePriceAsync_WhenPriceAlreadyExists_ShouldReturnUpdatedPrice()
+    {
+        //Arrange
+        var existingPrice = new Price()
+        {
+            Symbol = "MSFT",
+            Date = DateTime.Today,
+            Value = 50.0m
+        };
+        _mockPriceRepository.Update(Arg.Any<Price>())
+            .Returns(existingPrice);
+
+        //Act
+        var result = await _priceService.UpdatePriceAsync(new UpdatePriceRequest(
+            existingPrice.Id, 
+            existingPrice.Symbol, 
+            existingPrice.Date,
+            existingPrice.Value
+        ));
+
+        //Assert
+        result.Symbol.Should().Be(existingPrice.Symbol);
+        result.Date.Should().Be(existingPrice.Date);
+        result.Value.Should().Be(existingPrice.Value);
+    }
+    
+    [Test]
+    public async Task UpdatePriceAsync_WhenPriceDoesntExist_ShouldThrowException()
+    {
+        //Arrange
+        var updatedPriceRequest = new UpdatePriceRequest(
+            Guid.NewGuid(), 
+            "MSFT", 
+            DateTime.Today,
+            20.0m
+        );
+
+        _mockPriceRepository.Update(Arg.Any<Price>())
+            .Throws(new EntityNotFoundException("Error: Entity not found"));
+
+        //Act & assert
+        _priceService.Invoking(i => i.UpdatePriceAsync(updatedPriceRequest))
+            .Should().ThrowAsync<EntityNotFoundException>();
     }
 }
